@@ -1,0 +1,226 @@
+Turbo Assembler	 Version 4.1	    04/14/20 22:11:45	    Page 1
+frame.asm
+
+
+
+      1				     .186
+      2	0000			     .model tiny
+      3
+      4	0000			     .code
+      5				     org 100h
+      6
+      7	      =0030		     SHAPE_STYLE equ 30h
+      8	      =004E		     SYMBOL_STYLE equ 4eh
+      9	      =B800		     VIDEO_MEMORY equ 0b800h
+     10	      =02F8		     SCREEN_CENTRE equ 760d
+     11	      =00A0		     LINE_LENGTH equ 160d
+     12
+     13	0100			     Start:
+     14						     ;mov dx, 6d	     even length of the	frame
+     15						     ;mov cx, 6d	     even height of the	frame
+     16
+     17	0100  BE 0006				     mov si, 6d		     ;min(length, height)
+     18	0103  BA 0002				     mov dx, 2d		     ;length - si + 1
+     19	0106  B9 0002				     mov cx, 2d		     ;height - si + 1
+     20	0109			     Draw:
+     21	0109  83 FE 00				     cmp si, 0h		     ;animation	loop
+     22	010C  74 16				     je	EndProg
+     23
+     24	010E  E8 0014				     call DrawFrame
+     25	0111  41				     inc cx		     ;new height
+     26	0112  42				     inc dx		     ;new length
+     27	0113  4E				     dec si		     ;loop counter
+     28	0114			     Delay:
+     29	0114  51				     push cx
+     30	0115  52				     push dx		     ;to save data
+     31
+     32	0116  B9 0001				     mov cx, 1h		     ;main byte	0.25sec
+     33	0119  BA E848				     mov dx, 0e848h	     ;second byte 0.25 sec
+     34	011C  B4 86				     mov ah, 86h	     ;delay interruption
+     35	011E  CD 15				     int 15h
+     36	0120  5A				     pop dx
+     37	0121  59				     pop cx
+     38
+     39	0122  EB E5				     jmp Draw		     ;animation	loop
+     40	0124			     EndProg:
+     41	0124  C3				     ret
+     42
+     43				     ;=============================================================
+     44				     ;Prints a frame in	the centre of the screen of specified size
+     45				     ;Entry: DX	- length of a frame
+     46				     ;	     CX	- height of a frame
+     47				     ;Destr: AX
+     48				     ;=============================================================
+     49	0125			     DrawFrame	     proc
+     50	0125  51				     push cx
+     51	0126  52				     push dx
+     52
+     53	0127  68 B800				     push VIDEO_MEMORY
+     54	012A  07				     pop es
+     55
+     56	012B  BF 02F8				     mov di, SCREEN_CENTRE
+     57	012E  D1 EA				     shr dx, 1		     ;dx *= 2
+Turbo Assembler	 Version 4.1	    04/14/20 22:11:45	    Page 2
+frame.asm
+
+
+
+     58	0130  2B FA				     sub di, dx		     ;centralization
+     59	0132  D1 E2				     shl dx, 1
+     60
+     61	0134  D1 E7				     shl di, 1
+     62	0136  FC				     cld		     ;will ++di
+     63
+     64	0137  B4 4E				     mov ah, SYMBOL_STYLE	     ;symbol style
+     65
+     66
+     67	0139  B0 C9				     mov al, 'É'	     ;top line symbols
+     68	013B  B7 CD				     mov bh, 'Í'	     ;
+     69	013D  B3 BB				     mov bl, '»'	     ;
+     70
+     71	013F  52				     push dx		     ;to save the length for next iterations
+     72	0140  57				     push di		     ;same for pozition
+     73	0141  E8 003E				     call DrawLine
+     74	0144  5F				     pop di
+     75	0145  5A				     pop dx
+     76	0146  81 C7 00A0			     add di, LINE_LENGTH     ;transition to the	next line
+     77
+     78	014A  B0 BA				     mov al, 186d	     ;middle line symbols
+     79	014C  B7 20				     mov bh, ' '
+     80	014E  B3 BA				     mov bl, 186d
+     81	0150			     @@Next:				     ;loop for 'cx' middle lines
+     82	0150  52				     push dx		     ;to save the length for next iterations
+     83	0151  57				     push di		     ;same for pozition
+     84	0152  E8 002D				     call DrawLine
+     85	0155  5F				     pop di
+     86	0156  5A				     pop dx
+     87	0157  81 C7 00A0			     add di, LINE_LENGTH     ;tranzition to the	next line
+     88	015B  E2 F3				     loop @@Next
+     89
+     90	015D  B0 C8				     mov al, 200d	     ;bot line symbols
+     91	015F  B7 CD				     mov bh, 205d
+     92	0161  B3 BC				     mov bl, 188d
+     93
+     94	0163  52				     push dx		     ;to save the length for next iterations
+     95	0164  57				     push di		     ;same for pozition
+     96	0165  E8 001A				     call DrawLine
+     97	0168  5F				     pop di
+     98	0169  5A				     pop dx
+     99	016A  81 C7 00A0			     add di, LINE_LENGTH     ;transition to the	next line
+    100
+    101	016E  B0 00				     mov al, 0d
+    102	0170  B7 00				     mov bh, 0d
+    103	0172  B3 00				     mov bl, 0d
+    104
+    105	0174  52				     push dx		     ;to save the length for next iterations
+    106	0175  57				     push di		     ;same for pozition
+    107	0176  E8 0009				     call DrawLine
+    108	0179  5F				     pop di
+    109	017A  5A				     pop dx
+    110	017B  81 C7 00A0			     add di, LINE_LENGTH     ;transition to the	next line
+    111
+    112	017F  5A				     pop dx		     ;saving data
+    113	0180  59				     pop cx		     ;saving data
+    114	0181  C3				     ret
+Turbo Assembler	 Version 4.1	    04/14/20 22:11:45	    Page 3
+frame.asm
+
+
+
+    115	0182					     endp
+    116				     ;===========================================
+    117				     ;Entry: ES	- video	mem
+    118				     ;	     DI	- start	pozition
+    119				     ;	     DX	- length of the	line
+    120				     ;	     AH	- style
+    121				     ;	     AL	- left symbol
+    122				     ;	     BH	- middle symbol
+    123				     ;	     BL	- right	symbol
+    124				     ;Destr: CX
+    125				     ;Exit:  DI	- exit point
+    126				     ;===========================================
+    127	0182			     DrawLine	     proc
+    128	0182  51				     push cx
+    129
+    130	0183  3C 00				     cmp al, 0h
+    131	0185  74 06				     je	LastIter
+    132
+    133	0187  8B CA				     mov cx, dx	     ;stosw requires counter cx	and it must be length
+    134	0189  AB				     stosw
+    135	018A  EB 08 90				     jmp WithoutFirstSymbol
+    136
+    137
+    138	018D			     LastIter:
+    139	018D  B4 00				     mov ah, 0h
+    140	018F  8B CA				     mov cx, dx
+    141	0191  AB				     stosw
+    142	0192  B4 30				     mov ah, 30h
+    143
+    144	0194			     WithoutFirstSymbol:
+    145	0194  8A C7				     mov al, bh
+    146	0196  F3> AB				     rep stosw
+    147
+    148	0198  8A C3				     mov al, bl
+    149	019A  AB				     stosw
+    150
+    151	019B  80 FB BB				     cmp bl, 187d	     ;if first line
+    152	019E  74 0A				     je	FirstIter
+    153
+    154	01A0  B9 0002				     mov cx, 2d		     ;print shadow
+    155	01A3  B0 00				     mov al, 0h
+    156	01A5  B4 30				     mov ah, SHAPE_STYLE
+    157	01A7  AB				     stosw
+    158	01A8  B4 4E				     mov ah, 4eh
+    159	01AA			     FirstIter:
+    160	01AA  8A C3				     mov al, bl		     ;to save data
+    161	01AC  59				     pop cx
+    162	01AD  C3				     ret
+    163	01AE					     endp
+    164
+    165				     end Start
+Turbo Assembler	 Version 4.1	    04/14/20 22:11:45	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "04/14/20"
+??FILENAME			  Text	 "frame	  "
+??TIME				  Text	 "22:11:45"
+??VERSION			  Number 040A
+@32BIT				  Text	 0
+@@NEXT				  Near	 DGROUP:0150
+@CODE				  Text	 DGROUP
+@CODESIZE			  Text	 0
+@CPU				  Text	 0103H
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 FRAME
+@INTERFACE			  Text	 000H
+@MODEL				  Text	 1
+@STACK				  Text	 DGROUP
+@WORDSIZE			  Text	 2
+DELAY				  Near	 DGROUP:0114
+DRAW				  Near	 DGROUP:0109
+DRAWFRAME			  Near	 DGROUP:0125
+DRAWLINE			  Near	 DGROUP:0182
+ENDPROG				  Near	 DGROUP:0124
+FIRSTITER			  Near	 DGROUP:01AA
+LASTITER			  Near	 DGROUP:018D
+LINE_LENGTH			  Number 00A0
+SCREEN_CENTRE			  Number 02F8
+SHAPE_STYLE			  Number 0030
+START				  Near	 DGROUP:0100
+SYMBOL_STYLE			  Number 004E
+VIDEO_MEMORY			  Number B800
+WITHOUTFIRSTSYMBOL		  Near	 DGROUP:0194
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  0000 Word	  Public  DATA
+  _TEXT				  16  01AE Word	  Public  CODE
+
