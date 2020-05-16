@@ -2,6 +2,19 @@ global _start
 
 section .data
 
+determineTable:
+        dq procent
+        dq 60 dup (defaultDet)
+        dq bin
+        dq char
+        dq decimal
+        dq 10 dup (defaultDet)
+        dq oct
+        dq 3 dup (defaultDet)
+        dq string
+        dq 4 dup (defaultDet)
+        dq hex
+        
 format:		db "I %s %x %d%%%c%b", 10, 0
 string:		db "love", 0
 buf: resb 64d
@@ -27,18 +40,7 @@ section .text
 
 _start:
 
-        determineTable:
-        dq procent
-        dq 60 dup (defaultDet)
-        dq bin
-        dq char
-        dq decimal
-        dq 10 dup (defaultDet)
-        dq oct
-        dq 3 dup (defaultDet)
-        dq string
-        dq 4 dup (defaultDet)
-        dq hex
+        
 
         xor BUFFER_SIZE_RBX, BUFFER_SIZE_RBX
         printf format, string, 3802, 100, '!', 127
