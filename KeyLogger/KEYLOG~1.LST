@@ -1,4 +1,4 @@
-Turbo Assembler	 Version 4.1	    05/16/20 18:24:38	    Page 1
+Turbo Assembler	 Version 4.1	    05/16/20 18:55:12	    Page 1
 keylog~1.asm
 
 
@@ -54,13 +54,13 @@ keylog~1.asm
      49
      50					     ;staying resident in memory
      51	013A  B8 3100				     mov ax, 3100h;
-     52	013D  BA 02F2r				     mov dx, offset end_label
+     52	013D  BA 02E4r				     mov dx, offset end_label
      53	0140  C1 EA 04				     shr dx, 4
      54	0143  42				     inc dx
      55	0144  CD 21				     int 21h;
      56
      57
-Turbo Assembler	 Version 4.1	    05/16/20 18:24:38	    Page 2
+Turbo Assembler	 Version 4.1	    05/16/20 18:55:12	    Page 2
 keylog~1.asm
 
 
@@ -120,17 +120,17 @@ keylog~1.asm
     110	0175  74 0E				     jz	@@exit
     111
     112					     ;setting bx as len
-    113	0177  8A 1E 01F1r			     mov bl, tail_ind
+    113	0177  8A 1E 01E3r			     mov bl, tail_ind
     114	017B  32 FF				     xor bh, bh
-Turbo Assembler	 Version 4.1	    05/16/20 18:24:38	    Page 3
+Turbo Assembler	 Version 4.1	    05/16/20 18:55:12	    Page 3
 keylog~1.asm
 
 
 
     115
     116					     ;saving key to buff
-    117	017D  88 87 01F2r			     mov buff[bx], al
-    118	0181  FE 06 01F1r			     inc tail_ind
+    117	017D  88 87 01E4r			     mov buff[bx], al
+    118	0181  FE 06 01E3r			     inc tail_ind
     119
     120
     121	0185			     @@exit:
@@ -148,7 +148,7 @@ keylog~1.asm
     133	0188  0E				     push cs
     134	0189  1F				     pop ds
     135
-    136	018A  2E: 8A 0E	01F1r			     mov cl, cs:tail_ind
+    136	018A  2E: 8A 0E	01E3r			     mov cl, cs:tail_ind
     137	018F  32 ED				     xor ch, ch
     138
     139						     ;cmp head_ind, cl
@@ -161,30 +161,30 @@ keylog~1.asm
     146	0192  B8 3D01				     mov ax, 3d01h;
     147	0195  BA 01D7r				     mov dx, offset log_file;
     148	0198  CD 21				     int 21h
-    149	019A  A3 01EDr				     mov file_handler, ax
+    149	019A  A3 01DFr				     mov file_handler, ax
     150
     151
     152					     ;moving cursor to the end of file
     153	019D  B8 4202				     mov ax, 4202h
-    154	01A0  8B 1E 01EDr			     mov bx, file_handler
+    154	01A0  8B 1E 01DFr			     mov bx, file_handler
     155	01A4  33 C9				     xor cx, cx
     156	01A6  33 D2				     xor dx, dx
     157	01A8  CD 21				     int 21h
     158
     159				     ;!!!
-    160	01AA  A0 01EFr				     mov al, head_ind
+    160	01AA  A0 01E1r				     mov al, head_ind
     161	01AD  32 E4				     xor ah, ah
-    162	01AF  BA 01F2r				     mov dx, offset buff
+    162	01AF  BA 01E4r				     mov dx, offset buff
     163	01B2  03 D0				     add dx, ax
     164
     165	01B4  59				     pop cx
     166					     ;writing to file
     167	01B5  B4 40				     mov ah, 40h
-    168	01B7  8B 1E 01EDr			     mov bx, file_handler
-    169	01BB  2A 0E 01EFr			     sub cl, head_ind
+    168	01B7  8B 1E 01DFr			     mov bx, file_handler
+    169	01BB  2A 0E 01E1r			     sub cl, head_ind
     170	01BF  32 ED				     xor ch, ch
     171				     ;		     mov dx, offset buff
-Turbo Assembler	 Version 4.1	    05/16/20 18:24:38	    Page 4
+Turbo Assembler	 Version 4.1	    05/16/20 18:55:12	    Page 4
 keylog~1.asm
 
 
@@ -192,13 +192,13 @@ keylog~1.asm
     172				     ;		     add dx, head_ind
     173	01C1  CD 21				     int 21h
     174
-    175	01C3  02 0E 01EFr			     add cl, head_ind
+    175	01C3  02 0E 01E1r			     add cl, head_ind
     176	01C7  32 ED				     xor ch, ch
-    177	01C9  88 0E 01EFr			     mov head_ind, cl
+    177	01C9  88 0E 01E1r			     mov head_ind, cl
     178
     179					     ;closing file
     180	01CD  B4 3E				     mov ah, 3eh
-    181	01CF  8B 1E 01EDr			     mov bx, file_handler
+    181	01CF  8B 1E 01DFr			     mov bx, file_handler
     182	01D3  CD 21				     int 21h
     183
     184	01D5			     @@exit:
@@ -207,24 +207,22 @@ keylog~1.asm
     187	01D7					     endp
     188
     189
-    190	01D7  63 3A 5C 75 73 72	5C+  log_file db 'c:\usr\keylog\log.txt', 0
-    191	      6B 65 79 6C 6F 67	5C+
-    192	      6C 6F 67 2E 74 78	74+
-    193	      00
-    194	01ED  ????		     file_handler dw ?
-    195
-    196	01EF  00		     head_ind db 0d
-    197	01F0  00		     mutex db 0
-    198	01F1  00		     tail_ind db 0d
+    190	01D7  6C 6F 67 2E 74 78	74+  log_file db 'log.txt', 0
+    191	      00
+    192	01DF  ????		     file_handler dw ?
+    193
+    194	01E1  00		     head_ind db 0d
+    195	01E2  00		     mutex db 0
+    196	01E3  00		     tail_ind db 0d
+    197
+    198	01E4  0100*(00)		     buff db 256d dup (0h)
     199
-    200	01F2  0100*(00)		     buff db 256d dup (0h)
+    200
     201
     202
-    203
-    204
-    205	02F2			     end_label:
-    206				     end Start
-Turbo Assembler	 Version 4.1	    05/16/20 18:24:38	    Page 5
+    203	02E4			     end_label:
+    204				     end Start
+Turbo Assembler	 Version 4.1	    05/16/20 18:55:12	    Page 5
 Symbol Table
 
 
@@ -234,7 +232,7 @@ Symbol Name			  Type	 Value
 
 ??DATE				  Text	 "05/16/20"
 ??FILENAME			  Text	 "keylog~1"
-??TIME				  Text	 "18:24:38"
+??TIME				  Text	 "18:55:12"
 ??VERSION			  Number 040A
 @32BIT				  Text	 0
 @@EXIT				  Near	 DGROUP:0185
@@ -250,13 +248,13 @@ Symbol Name			  Type	 Value
 @MODEL				  Text	 1
 @STACK				  Text	 DGROUP
 @WORDSIZE			  Text	 2
-BUFF				  Byte	 DGROUP:01F2
-END_LABEL			  Near	 DGROUP:02F2
-FILE_HANDLER			  Word	 DGROUP:01ED
+BUFF				  Byte	 DGROUP:01E4
+END_LABEL			  Near	 DGROUP:02E4
+FILE_HANDLER			  Word	 DGROUP:01DF
 FLUSH_BUFF			  Near	 DGROUP:0187
-HEAD_IND			  Byte	 DGROUP:01EF
+HEAD_IND			  Byte	 DGROUP:01E1
 LOG_FILE			  Byte	 DGROUP:01D7
-MUTEX				  Byte	 DGROUP:01F0
+MUTEX				  Byte	 DGROUP:01E2
 NEW_28H				  Near	 DGROUP:0146
 NEW_9H				  Near	 DGROUP:015A
 OLD_28H_O			  Word	 DGROUP:0156
@@ -265,11 +263,11 @@ OLD_9H_O			  Word	 DGROUP:016A
 OLD_9H_S			  Word	 DGROUP:016C
 READ_TO_BUFF			  Near	 DGROUP:016E
 START				  Near	 DGROUP:0100
-TAIL_IND			  Byte	 DGROUP:01F1
+TAIL_IND			  Byte	 DGROUP:01E3
 
 Groups & Segments		  Bit Size Align  Combine Class
 
 DGROUP				  Group
   _DATA				  16  0000 Word	  Public  DATA
-  _TEXT				  16  02F2 Word	  Public  CODE
+  _TEXT				  16  02E4 Word	  Public  CODE
 
