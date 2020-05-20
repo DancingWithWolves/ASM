@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <typeinfo>
 
-#include "List.h"
+#include "List_1.h"
 
 #ifdef DEBUG
 	#define ON_DEBUG(cond) cond;
@@ -16,7 +16,7 @@ const char* errMsg[]{
 	"OK", "LIST_EMPTY", "NEGATIVE_SIZE", "EXTERNAL_INTRUSION", "FULL"
 };
 
-const Elem_t POISON_ELEM = -123456;
+const Elem_t POISON_ELEM = nullptr;
 const unsigned long long canary = 123456789;
 
 const char separation[] = "\n------------------------------------------------------------------------------------\n";
@@ -215,14 +215,7 @@ int insertBefore( List_t *this_, int index, Elem_t val ){
 		return insertBegin( this_, val );
 	}
 	if( this_-> prev[ index ] != -1 ) return insertAfter( this_, this_-> prev[ index ], val );
-		/*if( index != this_-> head ){
-			this_-> next[ this_-> prev[ index ] ] = newIndex;
-		} else {
-			this_-> head = newIndex;
-		}
-		this_-> prev[ newIndex ] = this_-> prev[ index ];
-		this_-> prev[ index ] = newIndex;
-		this_-> next[ newIndex ] = index;*/
+	return 0;
 }
 
 void delElem( List_t *this_, int index ){
@@ -276,7 +269,7 @@ void tellMeEverythingYouKnow( char *name, List_t *this_, char *reason, const cha
 
     int size = this_-> size;
     fprintf( out, "list -> size = <%d>\n", size );
-    fprintf( out, "list -> maxSize = <%d>\n", this_-> maxSize );
+    fprintf( out, "list -> maxSize = <%lu>\n", this_-> maxSize );
     fprintf( out, "list -> data = <%p>\n", this_-> data );
     fprintf( out, "list -> free = <%d>\n", this_-> free );
     fprintf( out, "list -> head = <%d>\n", this_-> head );
@@ -284,7 +277,7 @@ void tellMeEverythingYouKnow( char *name, List_t *this_, char *reason, const cha
 
     for ( int i = 0; i < this_-> maxSize; i++ ){
         if( i < size ) fprintf( out, "\t*" ); else fprintf( out, "\t " );
-    fprintf( out, "data[%d] = <%d>;", i, this_-> data[i] );
+    fprintf( out, "data[%d] = <%s>;", i, this_-> data[i] );
         fprintf( out, " prev[%d] = <%d>;", i, this_-> prev[i] );
         fprintf( out, " next[%d] = <%d>;", i, this_-> next[i] );
         if ( this_-> data[i] == POISON_ELEM ) fprintf ( out, " [POISON]\n" ); else fprintf ( out, "\n" );
@@ -347,7 +340,7 @@ void printSortedList( List_t *this_ ){
 	printf( "-1 <--" );
 	for( int i = 0; i < this_-> size; i++ ){
 		if( i != 0 ) printf( ">" );
-		printf( " %d ", this_-> data[i] );
+		printf( " %s ", this_-> data[i] );
 		if( i != this_-> size - 1 ) printf( "<--" ); else printf( "--" );
 	}
 	printf( "> -1\n%s", separation );
@@ -358,30 +351,11 @@ void printListSlowly( List_t *this_ ){
 	printf( "-1 <--" );
 	while( cur != -1 ){
 		if( cur != this_-> head ) printf(">");
-		printf( " %d ", this_-> data[cur]);
+		printf( " %s ", this_-> data[cur]);
 		cur = this_-> next[ cur ];
 		if( cur != -1 ) printf( "<--" ); else printf( "--" );
 	}
 	printf( "> -1\n%s", separation );
 }
 
-void sortList( List_t *this_ ){
 
-	int cur = this_-> head;
-	int i = 0;
-
-	while( cur != -1 ){
-		this_-> prev[i++] = this_-> data[ cur ];
-		cur = this_-> next[ cur ];
-	}
-	int *tmp = this_-> data;
-	this_-> data = this_-> prev;
-	this_-> prev = tmp;
-
-	for( i = 0; i < this_-> size; i++ ){
-		this_-> next[i] = i + 1;
-		this_-> prev[i] = i - 1;
-	}
-	this_-> next[ this_-> size - 1 ] = -1;
-	return;
-}

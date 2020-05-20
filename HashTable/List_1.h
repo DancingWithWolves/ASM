@@ -4,7 +4,7 @@
 
 
 
-typedef int Elem_t;
+typedef char* Elem_t;
 
 extern const Elem_t POISON_ELEM;
 
@@ -38,7 +38,7 @@ void tellMeEverythingYouKnow( char *name, List_t *this_, char *reason, const cha
 
 void clearLog();
 
-void listInit( List_t *this_, char *name = "Default name" );
+void listInit( List_t *this_, const char *name = "Default name" );
 
 void listDestruct( List_t *this_ );
 
