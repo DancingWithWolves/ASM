@@ -4,15 +4,16 @@
 const int functions_qty = 5;
 
 enum Functions {
-    word_length, sum_hash, sum_len_hash, rolling_hash, Jenkins, Jenkins_asm
+    word_length, sum_hash, sum_len_hash, rolling_hash, Jenkins, Jenkins_asm, crc32
 };
-const char* hash_name[] = {"Длина слова", "Сумма аски-кодов", "Сумма аски-кодов, делённая на длину слова", "Rolling xor hash", "Jenkins", "Jenkins asm"};
+const char* hash_name[] = {"Длина слова", "Сумма аски-кодов", "Сумма аски-кодов, делённая на длину слова", "Rolling xor hash", "Jenkins", "Jenkins asm", "crc32"};
 
-unsigned long SumHash (const char* word);
-unsigned long SumLenHash (const char* word);
-unsigned long RollingHash (const char* word);
-unsigned long JenkinsC (const char* word);
-//unsigned long JenkinsAsm(const char* word);
+int SumHash (const char* word);
+int SumLenHash (const char* word);
+int RollingHash (const char* word);
+int JenkinsC (const char* word);
+//int JenkinsAsm( const char* word);
+int crc32_func (const char* word);
 
 int CountHash (const char *word, int function)
 {
@@ -28,16 +29,20 @@ int CountHash (const char *word, int function)
             return RollingHash(word);
         case Jenkins:
             return JenkinsC(word);
+        case crc32:
+            return crc32_func (word);
+        default:
+            return -1;
         //case Jenkins_asm:
         //    return JenkinsAsm(word);
     }
     return 0;
 }
 
-unsigned long SumHash (const char* word)
+int SumHash (const char* word)
 {
     assert(word);
-    unsigned long sum = 0;
+    int sum = 0;
 
     while (*word != '\0')
         sum += *(word++); 
@@ -46,10 +51,10 @@ unsigned long SumHash (const char* word)
 }
 
 
-unsigned long SumLenHash (const char* word)
+int SumLenHash (const char* word)
 {
     assert(word);
-    unsigned long len = strlen(word);
+    int len = strlen(word);
 
     if (len != 0){
         return SumHash(word)/len;
@@ -58,10 +63,10 @@ unsigned long SumLenHash (const char* word)
     return 0;
 }
 
-unsigned long RollingHash (const char* word)
+int RollingHash (const char* word)
 {
     assert(word);
-    unsigned long hash = 0;
+    int hash = 0;
 
     while (*word != 0){
         hash = ((hash << 1) | (hash >> 31)) ^ *(word++);
@@ -69,11 +74,35 @@ unsigned long RollingHash (const char* word)
 
     return hash;
 }
+int crc32_func (const char* data)
+{
 
-unsigned long JenkinsC (const char* word) 
+    int h = 0;
+    asm(R"(
+    .intel_syntax noprefix
+    lea rax, [%1]
+    xor %0, %0
+
+    loooooop%=:
+    crc32 %0, byte ptr [rax]
+    inc rax
+    cmp byte ptr [rax], 0
+
+    jne loooooop%=
+
+    .att_syntax prefix
+    )"
+    : "=r"(h)
+    : "r"(data)
+    : "rax", "rcx"
+    );
+
+    return h;
+}
+int JenkinsC (const char* word) 
 {
     assert(word);
-    unsigned long hash = 0;
+    int hash = 0;
 
     int i = 0;
     int len = strlen(word);
@@ -92,9 +121,9 @@ unsigned long JenkinsC (const char* word)
 }
 
 /*
-unsigned long JenkinsAsm(const char* word){
+int JenkinsAsm(const char* word){
 
-    unsigned long d = 0;
+    int d = 0;
 
     asm(R"(
     .intel_syntax noprefix

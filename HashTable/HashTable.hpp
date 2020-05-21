@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "List.hpp"
 #include "HashFunctions.hpp"
 
-const int hash_size = 47;
+const int table_size = 17;
 
 size_t GetFileSize (const char *file_name);
 void TestFunctions (const char *file_name);
 void TestFunction (const char *file_name, int hash_function);
 int InsertWord (List* table, char *word, int hash_function);
-int PrintResults (List* table, char *sausage_data, int hash_function_id);
+int PrintResults (List* table, int hash_function_id);
 
 void TestFunctions (const char *file_name)
 {
@@ -19,13 +20,34 @@ void TestFunctions (const char *file_name)
     }
 }
 
-int PrintResults (List* table, char *sausage_data, int hash_function_id)
+
+void Plot (const char *fname)
 {
+    char command[256] = "";
+    sprintf(command, "gnuplot -e \"set terminal png; set output 'graphs/%s.png'; plot 'graphs/%s.dat' u 1:2\"", fname, fname);
+   
+    
+    system(command);
+    //system("  ");
+}
+
+int PrintResults (List* table, int hash_function_id)
+{
+    char fname[64];
+    sprintf(fname, "%s.dat", hash_name[hash_function_id]);
+    size_t summary = 0;
+    FILE *out = fopen(fname, "w");
     printf("Функция: %s, количество элементов в списках:\n", hash_name[hash_function_id]);
-    for (int i = 0; i < hash_size; ++i) {
+    for (int i = 0; i < table_size; ++i) {
+        summary += table[i].size;
         printf("Список %d: %lu \n", table[i].id, table[i].size);
-    }
-    printf("\n");
+        fprintf(out, "%d\t%lu\n", table[i].id, table[i].size);
+    }    
+    printf("sum = %lu\n", summary);
+    fclose(out);
+
+    Plot(hash_name[hash_function_id]);
+
     return 0;
 }
 
@@ -42,39 +64,62 @@ size_t GetFileSize (const char *file_name)
     return ans;
 }
 
+char **SplitText (char *text, int text_len, int *qty)
+{
+    assert(text);
+    assert(qty);
+
+    *qty = 0;
+    for (int i = 0; i < text_len; ++i) {
+        if (text[i] == '\n' || 
+            text[i] == ' ') {
+                text[i] = '\0';
+                (*qty)++;          
+            }
+    }
+    text[text_len-1] = '\0';
+    (*qty)--;
+
+    char **output = new char* [*qty];
+    assert(output);
+    int cur_word = 0;
+
+    char *word = &(text[0]);
+    for (int i = 0; i < text_len; ++i) {
+        if (text[i] == '\0') {
+            output[cur_word++] = word;
+            //printf("выцепил %s\n", word);
+            word = &(text[i+1]);
+        }
+    }
+
+    return output;
+}
+
 void TestFunction (const char *file_name, int hash_function_id)
 {   
     assert(file_name);
 
-    List* table = new List[hash_size]();
+    List* table = new List[table_size]();
     
     size_t file_size = GetFileSize(file_name);
     char *sausage_data = new char [file_size];
 
-    FILE *in = fopen (file_name, "r");
+    FILE *in = fopen (file_name, "rb");
     assert(in);
     fread(sausage_data, sizeof(char), file_size, in);
     fclose(in);
 
-    char *word = sausage_data, *begin = sausage_data;
-    for (int i = 0; i < file_size; ++i) {
-        if (    *sausage_data == '\n' || 
-                *sausage_data == ' ' ||
-                *sausage_data == '.' || 
-                *sausage_data == '!' || 
-                *sausage_data == '?' || 
-                *sausage_data == 97 || //длинное тире 
-                *sausage_data == ',' || 
-                *sausage_data == ';') {
-
-            *sausage_data = '\0';
-            InsertWord(table, word, hash_function_id);
-            word = sausage_data + 1;
-
-        }
-        sausage_data++;
+    int words_qty = 0;
+    char **words = SplitText(sausage_data, file_size, &words_qty);
+    printf("words_qty = %d\n", words_qty);
+    for (int i = 0; i < words_qty; ++i) {
+        table[CountHash(words[i], hash_function_id) % table_size].PushBack(words[i]);
     }
-    PrintResults(table, sausage_data, hash_function_id);
+
+    PrintResults(table, hash_function_id);
+    free(words);
+    free(sausage_data);
     //delete[] table;
     //delete[] begin;
 }
@@ -83,7 +128,7 @@ int InsertWord (List* table, char *word, int hash_function_id)
 {
     assert(word);
     int hash = CountHash (word, hash_function_id);
-    table[hash % hash_size].PushBack(word);
+    table[hash % table_size].PushBack(word);
     return 0;
 }
 
