@@ -1,0 +1,156 @@
+----------------------------
+List 2
+Size = 8
+Head = [0x55a1b048d1a0], tail = [0x55a1b048d280]
+
+Data:
+[0x55a1b048d1a0] ->
+	value = (null),
+	next = [0x55a1b048d1c0],
+	prev = [(nil)]
+[0x55a1b048d1c0] ->
+	value = (null),
+	next = [0x55a1b048d1e0],
+	prev = [0x55a1b048d1a0]
+[0x55a1b048d1e0] ->
+	value = (null),
+	next = [0x55a1b048d200],
+	prev = [0x55a1b048d1c0]
+[0x55a1b048d200] ->
+	value = (null),
+	next = [0x55a1b048d220],
+	prev = [0x55a1b048d1e0]
+[0x55a1b048d220] ->
+	value = (null),
+	next = [0x55a1b048d240],
+	prev = [0x55a1b048d200]
+[0x55a1b048d240] ->
+	value = (null),
+	next = [0x55a1b048d260],
+	prev = [0x55a1b048d220]
+[0x55a1b048d260] ->
+	value = (null),
+	next = [0x55a1b048d280],
+	prev = [0x55a1b048d240]
+[0x55a1b048d280] ->
+	value = (null),
+	next = [(nil)],
+	prev = [0x55a1b048d260]
+----------------------------
+----------------------------
+List 0
+Size = 8
+Head = [0x55ac9fc7ee70], tail = [0x55ac9fc7ef50]
+
+Data:
+[0x55ac9fc7ee70] ->
+	value = (null),
+	next = [0x55ac9fc7ee90],
+	prev = [(nil)]
+[0x55ac9fc7ee90] ->
+	value = (null),
+	next = [0x55ac9fc7eeb0],
+	prev = [0x55ac9fc7ee70]
+[0x55ac9fc7eeb0] ->
+	value = (null),
+	next = [0x55ac9fc7eed0],
+	prev = [0x55ac9fc7ee90]
+[0x55ac9fc7eed0] ->
+	value = (null),
+	next = [0x55ac9fc7eef0],
+	prev = [0x55ac9fc7eeb0]
+[0x55ac9fc7eef0] ->
+	value = (null),
+	next = [0x55ac9fc7ef10],
+	prev = [0x55ac9fc7eed0]
+[0x55ac9fc7ef10] ->
+	value = (null),
+	next = [0x55ac9fc7ef30],
+	prev = [0x55ac9fc7eef0]
+[0x55ac9fc7ef30] ->
+	value = (null),
+	next = [0x55ac9fc7ef50],
+	prev = [0x55ac9fc7ef10]
+[0x55ac9fc7ef50] ->
+	value = (null),
+	next = [(nil)],
+	prev = [0x55ac9fc7ef30]
+----------------------------
+----------------------------
+List 1
+Size = 8
+Head = [0x55ac9fc7ef30], tail = [0x55ac9fc7ef50]
+
+Data:
+[0x55ac9fc7ef30] ->
+	value = (null),
+	next = [0x55ac9fc7ef10],
+	prev = [(nil)]
+[0x55ac9fc7ef10] ->
+	value = (null),
+	next = [0x55ac9fc7eef0],
+	prev = [0x55ac9fc7ef30]
+[0x55ac9fc7eef0] ->
+	value = (null),
+	next = [0x55ac9fc7eed0],
+	prev = [0x55ac9fc7ef10]
+[0x55ac9fc7eed0] ->
+	value = (null),
+	next = [0x55ac9fc7eeb0],
+	prev = [0x55ac9fc7eef0]
+[0x55ac9fc7eeb0] ->
+	value = (null),
+	next = [0x55ac9fc7ee90],
+	prev = [0x55ac9fc7eed0]
+[0x55ac9fc7ee90] ->
+	value = (null),
+	next = [0x55ac9fc7ee70],
+	prev = [0x55ac9fc7eeb0]
+[0x55ac9fc7ee70] ->
+	value = (null),
+	next = [0x55ac9fc7ef50],
+	prev = [0x55ac9fc7ee90]
+[0x55ac9fc7ef50] ->
+	value = (null),
+	next = [(nil)],
+	prev = [0x55ac9fc7ee70]
+----------------------------
+----------------------------
+List 2
+Size = 8
+Head = [0x55ac9fc7f1a0], tail = [0x55ac9fc7f280]
+
+Data:
+[0x55ac9fc7f1a0] ->
+	value = (null),
+	next = [0x55ac9fc7f1c0],
+	prev = [(nil)]
+[0x55ac9fc7f1c0] ->
+	value = (null),
+	next = [0x55ac9fc7f1e0],
+	prev = [0x55ac9fc7f1a0]
+[0x55ac9fc7f1e0] ->
+	value = (null),
+	next = [0x55ac9fc7f200],
+	prev = [0x55ac9fc7f1c0]
+[0x55ac9fc7f200] ->
+	value = (null),
+	next = [0x55ac9fc7f220],
+	prev = [0x55ac9fc7f1e0]
+[0x55ac9fc7f220] ->
+	value = (null),
+	next = [0x55ac9fc7f240],
+	prev = [0x55ac9fc7f200]
+[0x55ac9fc7f240] ->
+	value = (null),
+	next = [0x55ac9fc7f260],
+	prev = [0x55ac9fc7f220]
+[0x55ac9fc7f260] ->
+	value = (null),
+	next = [0x55ac9fc7f280],
+	prev = [0x55ac9fc7f240]
+[0x55ac9fc7f280] ->
+	value = (null),
+	next = [(nil)],
+	prev = [0x55ac9fc7f260]
+----------------------------
