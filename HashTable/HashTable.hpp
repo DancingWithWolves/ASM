@@ -78,7 +78,6 @@ char **SplitText (char *text, int text_len, int *qty)
             }
     }
     text[text_len-1] = '\0';
-    (*qty)--;
 
     char **output = new char* [*qty];
     assert(output);
