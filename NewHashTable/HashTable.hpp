@@ -63,17 +63,16 @@ class HashTable {
     void Plot (const char *fname)
     {
         char command[256] = "";
-        sprintf(command, "gnuplot -e \"set terminal png; set output 'graphs/%s.png'; plot 'graphs/%s.dat' u 1:2\"", fname, fname);
+        sprintf(command, "gnuplot -e \"set nokey; set terminal png; set output '/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.png'; plot '/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.dat' u 1:2\"", fname, fname);
     
         
         system(command);
-        //system("  ");
     }
     
     int PrintResults (int function_id)
     {
-        char fname[64];
-        sprintf(fname, "%s.dat", function_name[function_id]);
+        char fname[128];
+        sprintf(fname, "/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.dat", function_name[function_id]);
         size_t summary = 0;
         FILE *out = fopen(fname, "w");
         printf("Функция: %s, количество элементов в списках:\n", function_name[function_id]);
@@ -82,18 +81,17 @@ class HashTable {
             printf("Список %d: %lu \n", table[i].id, table[i].size);
             fprintf(out, "%d\t%lu\n", table[i].id, table[i].size);
         }    
-        //printf("sum = %lu\n", summary);
+        printf("sum = %lu\n", summary);
         fclose(out);
-
         
-        //Plot(function_name[function_id]);
+            Plot(function_name[function_id]);
 
         return 0;
     }
 
     public:
 
-    const size_t table_size = 17;
+    const size_t table_size = 8747;
 
     void FillTable (const char *fname, int function_id)
     {
@@ -106,11 +104,11 @@ class HashTable {
 
 
         size_t text_size = HandleInput(sausage_data, file_size);
-        //printf("text_size = %lu\n", text_size);
+        printf("text_size = %lu\n", text_size);
 
         size_t words_qty = 0;
         char **text = SplitText(sausage_data, text_size, &words_qty);
-        //printf("words_qty = %lu\n", words_qty);
+        printf("words_qty = %lu\n", words_qty);
         for (int i = 0; i < words_qty; ++i) {
             table[CountHash(text[i], function_id) % table_size].PushBack(text[i]);
         }
@@ -120,7 +118,7 @@ class HashTable {
     }
 
     
-    HashTable () { table = new List [table_size]; }
+    HashTable () { table = new List [table_size](); }
 
     ~HashTable () { delete[] table; }
 

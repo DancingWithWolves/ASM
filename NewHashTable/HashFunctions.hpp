@@ -2,26 +2,33 @@
 #include <string.h>
 
 enum functions {
-    wordLen
+    word_len, sum_hash, sum_len_hash, rolling_hash, jenkins
 };
 
 const char* function_name[] = {
-    "Длина слова"
+    "Word length", "ASCII sum", "ASCII sum divided by len", "Rolling hash", "Jenkins"
 };
 
 unsigned long WordLen (const char *word);
-
-
-
-
+unsigned long SumHash (const char *word);
+unsigned long SumLenHash (const char *word);
+unsigned long RollingHash (const char *word);
+unsigned long Jenkins (const char *word);
 
 
 unsigned long CountHash (const char *word, int function)
 {
     switch (function) {
-        case wordLen:
+        case word_len:
             return WordLen(word);
-        
+        case sum_hash:
+            return SumHash(word);
+        case sum_len_hash:
+            return SumLenHash(word);
+        case rolling_hash:
+            return RollingHash(word);
+        case jenkins:
+            return Jenkins(word);
         default:
             return -1;
     }
@@ -44,8 +51,6 @@ unsigned long SumHash (const char* word)
 
     return sum;
 }
-
-
 
 unsigned long SumLenHash (const char* word)
 {
@@ -90,72 +95,3 @@ unsigned long Jenkins(const char* word) {
     return hash;
 }
 
-unsigned long JenkinsAsm (const char* word)
-{
-    unsigned long d = 0;
-
-    asm(R"(
-    .intel_syntax noprefix
-
-    movsx rax, BYTE PTR [rdi]
-    test al, al
-    je .MyLibL4
-    xor edx, edx
-    .MyLibL3:
-    add rax, rdx
-    add rdi, 1
-    mov rdx, rax
-    sal rdx, 10
-    add rax, rdx
-    mov rdx, rax
-    shr rdx, 6
-    xor rdx, rax
-    movsx rax, BYTE PTR [rdi]
-    test al, al
-    jne .MyLibL3
-    lea rdx, [rdx+rdx*8]
-    mov rax, rdx
-    shr rax, 11
-    xor rax, rdx
-    mov rdx, rax
-    sal rdx, 15
-    add rax, rdx
-    jmp .MyLibExit
-
-    .MyLibL4:
-    xor eax, eax
-    .MyLibExit:
-    .att_syntax
-    )"
-    :"=r"(d)
-    :"D"(word)
-    );
-
-    return d;
-}
-
-unsigned long Crc32 (const char* word)
-{
-
-    unsigned long h = 0;
-    asm(R"(
-    .intel_syntax noprefix
-    lea rax, [%1]
-    xor %0, %0
-
-    loooooop%=:
-    Crc32 %0, byte ptr [rax]
-    inc rax
-    cmp byte ptr [rax], 0
-
-    jne loooooop%=
-
-    .att_syntax prefix
-    )"
-    : "=r"(h)
-    : "r"(word)
-    : "rax", "rcx"
-    );
-
-    return h;
-}

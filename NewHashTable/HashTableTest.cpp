@@ -4,6 +4,6 @@
 int main (int argc, const char *argv[])
 {
     HashTable table;
-    table.FillTable("/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/input.txt", 0);
+    table.FillTable("/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/words.txt", 4);
     return 0;
 }
