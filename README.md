@@ -7,16 +7,16 @@
 Протестированные функции:
 
 1) Длина слова: 
-![Image alt]("https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Word\ length.png")
+![Image alt]("https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Word_length.png")
 
 2) Сумма ASCII кодов символов строки: 
-![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Word length.png)
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/ASCII_sum.png)
 
 3) Сумма ASCII-кодов, делённая на длину слова:
-![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Word length.png)
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/ASCII_sum_divided_by_len.png)
 
 4) Rolling hash: 
-![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Rolling\ hash.png)
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Rolling_hash.png)
 
 5) Хеш-функция Дженкинса: 
 
