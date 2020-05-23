@@ -30,7 +30,7 @@
 
 
 # Сделаем профилирвание.
-Вот что говорит нам многоуважаемый perf:
+Вот что говорит нам многоуважаемый perf.
 
 # Скриншот из отчёта Perf:
 ![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_0.png)
