@@ -64,7 +64,6 @@ class HashTable {
     {
         char command[256] = "";
         sprintf(command, "gnuplot -e \"set nokey; set terminal png; set output '/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.png'; plot '/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.dat' u 1:2\"", fname, fname);
-    
         
         system(command);
     }
@@ -75,16 +74,15 @@ class HashTable {
         sprintf(fname, "/home/dimoha_zadira/Work/Asm/ASM/NewHashTable/graphs/%s.dat", function_name[function_id]);
         size_t summary = 0;
         FILE *out = fopen(fname, "w");
-        printf("Функция: %s, количество элементов в списках:\n", function_name[function_id]);
+
         for (int i = 0; i < table_size; ++i) {
             summary += table[i].size;
-            printf("Список %d: %lu \n", table[i].id, table[i].size);
             fprintf(out, "%d\t%lu\n", table[i].id, table[i].size);
         }    
-        printf("sum = %lu\n", summary);
+
         fclose(out);
         
-            Plot(function_name[function_id]);
+        Plot(function_name[function_id]);
 
         return 0;
     }
@@ -104,11 +102,10 @@ class HashTable {
 
 
         size_t text_size = HandleInput(sausage_data, file_size);
-        printf("text_size = %lu\n", text_size);
 
         size_t words_qty = 0;
         char **text = SplitText(sausage_data, text_size, &words_qty);
-        printf("words_qty = %lu\n", words_qty);
+
         for (int i = 0; i < words_qty; ++i) {
             table[CountHash(text[i], function_id) % table_size].PushBack(text[i]);
         }
@@ -119,6 +116,6 @@ class HashTable {
 
     
     HashTable () { table = new List [table_size](); }
-
+    ~HashTable () { delete[] table; }
 
 };
