@@ -116,6 +116,6 @@ class HashTable {
 
     
     HashTable () { table = new List [table_size](); }
-    ~HashTable () { delete[] table; }
+    //~HashTable () { delete[] table; }
 
 };
