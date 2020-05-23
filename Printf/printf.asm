@@ -2,6 +2,20 @@ global _start
 
 section .data
 
+jump_table:
+        dq simple
+        times 60 dq 0 
+        dq print_binary
+        dq print_char
+        dq print_decimal
+        times 10 dq 0
+        dq print_octal
+        times 3 dq 0
+        dq print_string
+        times 4 dq 0
+        dq print_hex
+
+
 format:		db "I %s %x %d%%%c%b", 10, 0
 string:		db "love", 0
 buf: resb 64d
@@ -47,28 +61,29 @@ next:
         
         inc NEXT_FORMAT_SYMBOL_RBP
         
+        movzx R12, byte [NEXT_FORMAT_SYMBOL_RBP]
+        jmp qword [8 * R12 - 8 * '%' + jump_table]
 
-        ;switch case
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], '%'      ;case %%
-        je simple
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], '%'      ;case %%
+        ;je simple
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'c'
-        je print_char
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'b'
+        ;je print_binary
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 's'
-        je print_string
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'c'
+        ;je print_char
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'd'
-        je print_decimal
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'd'
+        ;je print_decimal
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'b'
-        je print_binary
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'o'
+        ;je print_octal
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'o'
-        je print_octal
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 's'
+        ;je print_string   
 
-        cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'x'
-        je print_hex
+        ;cmp byte [NEXT_FORMAT_SYMBOL_RBP], 'x'
+        ;je print_hex
 ;=============================================\
 ;adds next format string symbol to buffer
 ;=============================================|
