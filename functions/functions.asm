@@ -8,8 +8,11 @@ start:
 		int 21h
 
 ;=======================================================================
-; Entry: cx - array size, ah - byte to search, si - pointer
-; Exit:  bx - index of first found element or ffffh if was not found
+; Entry: 	CX - array size, 
+;			AH - byte to search, 
+;			SI - pointer
+; Exit:  	BA - index of first found element or ffffh if was not found
+; Destr: 	BX, CX = 0 
 ;=======================================================================
 memchr	proc
 		cld
@@ -29,8 +32,13 @@ memchr	proc
 		endp
 
 ;=======================================================================
-; Entry: cx - size, bx - pointer to first array, si - pointer to second array
-; Exit:  al: 0 - equal, 1 - first is bigger, 2 - second is bigger
+; Entry: 	CX - size, 
+;			BX - pointer to first array, 
+;			SI - pointer to second array
+; Exit:  	AL: 0 - equal, 
+;				1 - first is bigger, 
+;				2 - second is bigger
+; Destr: 	CX, AH
 ;=======================================================================
 
 memcmp	proc
@@ -59,7 +67,10 @@ memcmp	proc
 		endp
 
 ;=======================================================================
-; Entry: cx - size, di - pointer to memory to set, al - char to set
+; Entry: 	CX - size, 
+;			DI - pointer to memory to set, 
+;			AL - char to set
+; Destr: 	CX
 ;=======================================================================
 
 memset	proc
@@ -69,21 +80,24 @@ memset	proc
 		endp
 
 ;=======================================================================
-; Entry: cx - size, di - pointer to, si - pointer from
+; Entry: 	CX - size, 
+;			DI - pointer to, 
+;			SI - pointer from
+; Destr: 	CX
 ;=======================================================================
 
 memcpy	proc
 		cld
 @@next:		
-		lodsb
-		stosb
-		loop @@next
+		rep stosb
 		ret
 		endp
 
 ;=======================================================================
-; Entry: si - pointer to, ah - element to search
-; Exit:  bx - index if found or ffffh if not
+; Entry: 	SI - pointer to, 
+;			AH - element to search
+; Exit:  	BX - index if found or ffffh if not
+; Destr: 	AL, AH
 ;=======================================================================
 
 strchr	proc
@@ -105,8 +119,12 @@ strchr	proc
 		endp
 
 ;==========================================================================
-; Entry: bx - first string, si - second string
-; Exit:  al: 0 if equal, 1 if first is bigger, 2 if second
+; Entry: 	BX - first string, 
+;			SI - second string
+; Exit:  	AL: 0 if equal, 
+;				1 if first is above, 
+;				2 if second is above
+; Destr: 	AH, AL
 ;==========================================================================
 
 strcmp	proc
@@ -138,8 +156,9 @@ strcmp	proc
 		endp
 
 ;=======================================================================
-; Entry: si - str to search length of
-; Exit:  cx - length
+; Entry: 	SI - str to search length of
+; Exit:  	CX - length
+; Destr: 	AL
 ;=======================================================================
 
 strlen	proc
@@ -157,8 +176,9 @@ strlen	proc
 		endp
 
 ;=======================================================================
-; Entry: si - from, di - to
-; Destr: si, di, al
+; Entry: 	SI - from, 
+;			DI - to
+; Destr: 	AL
 ;=======================================================================
 
 strcpy	proc
