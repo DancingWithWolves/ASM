@@ -35,5 +35,94 @@
 # Скриншот из отчёта Perf:
 ![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_0.png)
 
+Понятно, что следует оптимизировать функцию Jenkins.
 
+Случилось.
+# Было:
+```
+unsigned long Jenkins (const char* word) 
+{   
+    unsigned long hash = 0;
+
+    int i = 0;
+    int len = strlen(word);
+
+    while (i != len) {
+        hash += word[i++];
+        hash += hash << 10;
+        hash ^= hash >> 6;
+    }
+
+    hash += hash << 3;
+    hash ^= hash >> 11;
+    hash += hash << 15;
+
+    return hash;
+}
+```
+# Стало (спасибо, *https://godbolt.org/*):
+```
+unsigned long Jenkins_asm (const char* word)
+{
+
+    unsigned long hash = 0;
+
+    asm(R"(
+    .intel_syntax noprefix
+
+    movsx rax, BYTE PTR [rdi]
+    test al, al
+    je .MyLibL4
+    xor edx, edx
+    .MyLibL3:
+    add rax, rdx
+    add rdi, 1
+    mov rdx, rax
+    sal rdx, 10
+    add rax, rdx
+    mov rdx, rax
+    shr rdx, 6
+    xor rdx, rax
+    movsx rax, BYTE PTR [rdi]
+    test al, al
+    jne .MyLibL3
+    lea rdx, [rdx+rdx*8]
+    mov rax, rdx
+    shr rax, 11
+    xor rax, rdx
+    mov rdx, rax
+    sal rdx, 15
+    add rax, rdx
+    jmp .MyLibExit
+
+    .MyLibL4:
+    xor eax, eax
+    .MyLibExit:
+    .att_syntax
+    )"
+    :"=r"(hash)
+    :"D"(word)
+    );
+
+    return hash;
+}
+```
+
+# Результаты ускорения:
+
+# -O1:
+
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_1_out.png)
+
+# -O3:
+
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_3_out.png)
+
+# Асмблерная вставка:
+
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/after_asm.png)
+
+Итак, мы сравнялись (или даже побили) *-O3* и выиграли *-O1* в 1,56 раза.
+
+# В заключение хочется сказать: Пишешь плохой код -- ты плохой кот. Пиши хороший код, хороший кот!
 
