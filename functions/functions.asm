@@ -122,8 +122,8 @@ strchr	proc
 ; Entry: 	BX - first string, 
 ;			SI - second string
 ; Exit:  	AL: 0 if equal, 
-;				1 if first is above, 
-;				2 if second is above
+;				>0 if first is above, 
+;				<0 if second is above
 ; Destr: 	AH, AL
 ;==========================================================================
 
