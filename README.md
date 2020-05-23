@@ -7,7 +7,7 @@
 Протестированные функции:
 
 Длина слова: 
-![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/Word length.png)
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/Word length.png)
 сумма ASCII кодов символов строки: 
 
 сумма ASCII-кодов, делённая на длину слова: 
