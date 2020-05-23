@@ -103,41 +103,44 @@ unsigned long Jenkins_asm (const char* word)
 
     unsigned long hash = 0;
 
-    asm(R"(
+    asm ( R"(
     .intel_syntax noprefix
 
-    movsx rax, BYTE PTR [rdi]
-    test al, al
-    je .MyLibL4
-    xor edx, edx
-    .MyLibL3:
-    add rax, rdx
-    add rdi, 1
-    mov rdx, rax
-    sal rdx, 10
-    add rax, rdx
-    mov rdx, rax
-    shr rdx, 6
-    xor rdx, rax
-    movsx rax, BYTE PTR [rdi]
-    test al, al
-    jne .MyLibL3
-    lea rdx, [rdx+rdx*8]
-    mov rax, rdx
-    shr rax, 11
-    xor rax, rdx
-    mov rdx, rax
-    sal rdx, 15
-    add rax, rdx
-    jmp .MyLibExit
+        movsx rax, BYTE PTR [rdi]
+        test al, al
 
-    .MyLibL4:
-    xor eax, eax
-    .MyLibExit:
-    .att_syntax
+        je .Label4
+        xor edx, edx
+
+    .Label3:
+        add rax, rdx
+        add rdi, 1
+        mov rdx, rax
+        sal rdx, 10
+        add rax, rdx
+        mov rdx, rax
+        shr rdx, 6
+        xor rdx, rax
+        movsx rax, BYTE PTR [rdi]
+        test al, al
+        jne .Label3
+        lea rdx, [rdx+rdx*8]
+        mov rax, rdx
+        shr rax, 11
+        xor rax, rdx
+        mov rdx, rax
+        sal rdx, 15
+        add rax, rdx
+        jmp .Exit
+
+    .Label4:
+        xor eax, eax
+    .Exit:
+        .att_syntax
     )"
-    :"=r"(hash)
-    :"D"(word)
+
+        :"=r"(hash)
+        :"D"(word)
     );
 
     return hash;
