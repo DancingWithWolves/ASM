@@ -82,9 +82,10 @@ class HashTable {
             printf("Список %d: %lu \n", table[i].id, table[i].size);
             fprintf(out, "%d\t%lu\n", table[i].id, table[i].size);
         }    
-        printf("sum = %lu\n", summary);
+        //printf("sum = %lu\n", summary);
         fclose(out);
 
+        
         //Plot(function_name[function_id]);
 
         return 0;
