@@ -107,7 +107,8 @@ class HashTable {
         char **text = SplitText(sausage_data, text_size, &words_qty);
 
         for (int i = 0; i < words_qty; ++i) {
-            table[CountHash(text[i], function_id) % table_size].PushBack(text[i]);
+            table[Jenkins(text[i]) % table_size].PushBack(text[i]);
+            //table[CountHash(text[i], function_id) % table_size].PushBack(text[i]);
         }
 
         PrintResults(function_id);
