@@ -6,7 +6,7 @@ enum functions {
 };
 
 const char* function_name[] = {
-    "Word length", "ASCII sum", "ASCII sum divided by len", "Rolling hash", "Jenkins"
+    "Word_length", "ASCII_sum", "ASCII_sum_divided_by_len", "Rolling_hash", "Jenkins"
 };
 
 unsigned long WordLen (const char *word);
