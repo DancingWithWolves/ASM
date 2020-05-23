@@ -60,7 +60,7 @@ unsigned long Jenkins (const char* word)
     return hash;
 }
 ```
-# Стало (спасибо, *https://godbolt.org/*):
+# Стало:
 ```
 unsigned long Jenkins_asm (const char* word)
 {
