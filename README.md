@@ -31,7 +31,18 @@
 
 # Сделаем профилирвание.
 Вот что говорит нам многоуважаемый perf:
-![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/analysis.png)
+
+# O0:
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_0.png)
+
+# O1:
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_1.png)
+
+# O2:
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_2.png)
+
+# O3:
+![Image alt](https://github.com/DancingWithWolves/ASM/raw/newHashTable/NewHashTable/graphs/opt_3.png)
 
 Понятно, что оптимизировать будем функции FillTable и Jenkins.
 
